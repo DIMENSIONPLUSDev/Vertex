@@ -3,20 +3,32 @@ import {StyleSheet} from 'react-native';
 const TourStyles = StyleSheet.create({
   Container: {
     flex: 1,
-    justifyContent: 'flex-end',
+    //justifyContent: 'flex-end',
+  },
+  Title: {
+    paddingBottom: 10
   },
   VideoView: {
     paddingHorizontal: 15,
     marginTop: 10,
+    paddingBottom: 10,
+    flex: 2
   },
   RequestView: {
     flex: 3,
     paddingHorizontal: 15,
     paddingBottom: 15,
   },
-  RequestItemView: {
+  RequestItemsView: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
+
+  },
+  RequestItemView: {
+    alignItems: "center"
+  },
+  RequestIcons: {
+    paddingBottom: 5
   },
   VariableView: {
     flex: 3,
@@ -24,15 +36,24 @@ const TourStyles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 15,
   },
-  VariableItemView: {
+  VariableItemsView: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
+  },
+  VariableItemView: {
+    alignItems: "center"
+  },
+  VariableIcons: {
+    paddingBottom: 5
   },
   ArticleView: {
     flex: 1,
     paddingHorizontal: 15,
     paddingVertical: 15,
   },
+  ArticleItemsView : {
+
+  }
 });
 
 export default TourStyles;
