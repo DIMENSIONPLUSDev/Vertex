@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '10.0'
+platform :ios, '12.0'
 
 target 'Vertex' do
   config = use_native_modules!
@@ -12,13 +12,9 @@ target 'Vertex' do
     :hermes_enabled => false
   )
 
-  pod 'react-native-location', :path => '../node_modules/react-native-location'
 
-  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
 
   target 'VertexTests' do
     inherit! :complete

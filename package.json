@@ -37,6 +37,7 @@
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^11.4.4",
     "react-native-youtube-iframe": "^2.0.1",
+    "react-native-zohodesk-portal-sdk": "^1.0.1",
     "react-query": "^3.16.0"
   },
   "devDependencies": {
