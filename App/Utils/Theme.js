@@ -12,11 +12,11 @@ const CombinedDefaultTheme = {
   ...NavigationDefaultTheme,
   dark: false,
   roundness: 0,
-
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
     primary: "#F2BB1D",
+    accent: "#4d4d4d" ,
     background: "#FFFFFF",
     card: "#F8F8F8",
     text: "#4d4d4d",
@@ -29,9 +29,20 @@ const CombinedDefaultTheme = {
 const CombinedDarkTheme = {
   ...PaperDarkTheme,
   ...NavigationDarkTheme,
+  dark: true,
+  roundness: 0,
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
+    primary: "#F2BB1D",
+    accent: "#F2BB1D",
+    background: "#1a1a1a",
+    card: "#262626",
+    text: "#ffffff",
+    border: "#FFFFFF",
+    notification: "#F2BB1D",
+    surface: "#262626",
+    error: '#B00020',
   },
 };
 

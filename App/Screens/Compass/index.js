@@ -1,156 +1,245 @@
-import React, {Component} from "react";
-import {Text, View, Image, Dimensions} from "react-native";
-import {Grid, Col, Row} from "react-native-easy-grid";
-import {magnetometer, SensorTypes, setUpdateIntervalForType} from "react-native-sensors";
-import LPF from "lpf";
+import React, {useState, useEffect, useRef, useCallback} from 'react';
+import {
+  Image,
+  SafeAreaView,
+  View,
+  Linking,
+  Alert,
+  Platform,
+  PermissionsAndroid,
+  ToastAndroid,
+} from 'react-native';
+import CompassHeading from 'react-native-compass-heading';
+import {Subheading, Title, Text} from 'react-native-paper';
+import Geolocation from 'react-native-geolocation-service';
+import CompassStyles from './styles';
 
-const {height, width} = Dimensions.get("window");
+export default function Compass() {
+  const [compassHeading, setCompassHeading] = useState(0);
+  const [forceLocation, setForceLocation] = useState(true);
+  const [highAccuracy, setHighAccuracy] = useState(true);
+  const [locationDialog, setLocationDialog] = useState(true);
+  const [significantChanges, setSignificantChanges] = useState(false);
+  const [observing, setObserving] = useState(false);
+  const [foregroundService, setForegroundService] = useState(false);
+  const [location, setLocation] = useState(null);
+  const watchId = useRef(null);
+  useEffect(() => {
+    const degree_update_rate = 3;
 
-export default class Compass extends Component {
-  constructor() {
-    super();
-    this.state = {
-      magnetometer: "0",
+    // accuracy on android will be hardcoded to 1
+    // since the value is not available.
+    // For iOS, it is in degrees
+    CompassHeading.start(degree_update_rate, ({heading, accuracy}) => {
+      setCompassHeading(heading);
+    });
+    getLocation();
+    getLocationUpdates();
+    return () => {
+      CompassHeading.stop();
+      removeLocationUpdates();
     };
-    LPF.init([]);
-    LPF.smoothing = 0.2;
-  }
+  }, []);
 
-  componentDidMount() {
-    this._toggle();
-  }
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        Alert.alert('Unable to open settings');
+      });
+    };
+    const status = await Geolocation.requestAuthorization('whenInUse');
 
-  componentWillUnmount() {
-    this._unsubscribe();
-  }
-
-  _toggle = () => {
-    if (this._subscription) {
-      this._unsubscribe();
-    } else {
-      this._subscribe();
+    if (status === 'granted') {
+      return true;
     }
+
+    if (status === 'denied') {
+      Alert.alert('Location permission denied');
+    }
+
+    if (status === 'disabled') {
+      Alert.alert(
+        `Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`,
+        '',
+        [
+          {text: 'Go to Settings', onPress: openSetting},
+          {text: "Don't Use Location", onPress: () => {}},
+        ],
+      );
+    }
+
+    return false;
   };
 
-  _subscribe = async () => {
-    setUpdateIntervalForType(SensorTypes.magnetometer, 16);
-    this._subscription = magnetometer.subscribe(
-      sensorData => this.setState({magnetometer: this._angle(sensorData)}),
-      error => console.log("The sensor is not available"),
+  const hasLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    }
+
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show(
+        'Location permission denied by user.',
+        ToastAndroid.LONG,
+      );
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show(
+        'Location permission revoked by user.',
+        ToastAndroid.LONG,
+      );
+    }
+
+    return false;
+  };
+
+  const getLocation = async () => {
+    const hasPermission = await hasLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    Geolocation.getCurrentPosition(
+      position => {
+        setLocation(position);
+        //console.log(position);
+      },
+      error => {
+        Alert.alert(`Code ${error.code}`, error.message);
+        setLocation(null);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+          ios: 'best',
+        },
+        enableHighAccuracy: highAccuracy,
+        timeout: 15000,
+        maximumAge: 10000,
+        distanceFilter: 0,
+        forceRequestLocation: forceLocation,
+        showLocationDialog: locationDialog,
+      },
     );
   };
 
-  _unsubscribe = () => {
-    this._subscription && this._subscription.unsubscribe();
-    this._subscription = null;
-  };
+  const getLocationUpdates = async () => {
+    const hasPermission = await hasLocationPermission();
 
-  _angle = magnetometer => {
-    let angle = 0;
-    if (magnetometer) {
-      let {x, y} = magnetometer;
-      if (Math.atan2(y, x) >= 0) {
-        angle = Math.atan2(y, x) * (180 / Math.PI);
-      } else {
-        angle = (Math.atan2(y, x) + 2 * Math.PI) * (180 / Math.PI);
-      }
+    if (!hasPermission) {
+      return;
     }
-    return Math.round(LPF.next(angle));
+
+    setObserving(true);
+
+    watchId.current = Geolocation.watchPosition(
+      position => {
+        setLocation(position);
+      },
+      error => {
+        setLocation(null);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+          ios: 'best',
+        },
+        enableHighAccuracy: highAccuracy,
+        distanceFilter: 0,
+        interval: 5000,
+        fastestInterval: 2000,
+        forceRequestLocation: forceLocation,
+        showLocationDialog: locationDialog,
+        useSignificantChanges: significantChanges,
+      },
+    );
   };
 
-  _direction = degree => {
+  const removeLocationUpdates = useCallback(() => {
+    if (watchId.current !== null) {
+      Geolocation.clearWatch(watchId.current);
+      watchId.current = null;
+      setObserving(false);
+    }
+  }, []);
+
+  function directions(degree) {
     if (degree >= 22.5 && degree < 67.5) {
-      return "NE";
+      return 'NE';
     } else if (degree >= 67.5 && degree < 112.5) {
-      return "E";
+      return 'E';
     } else if (degree >= 112.5 && degree < 157.5) {
-      return "SE";
+      return 'SE';
     } else if (degree >= 157.5 && degree < 202.5) {
-      return "S";
+      return 'S';
     } else if (degree >= 202.5 && degree < 247.5) {
-      return "SW";
+      return 'SW';
     } else if (degree >= 247.5 && degree < 292.5) {
-      return "W";
+      return 'W';
     } else if (degree >= 292.5 && degree < 337.5) {
-      return "NW";
+      return 'NW';
     } else {
-      return "N";
+      return 'N';
     }
-  };
-
-  // Match the device top with pointer 0° degree. (By default 0° starts from the right of the device.)
-  _degree = magnetometer => {
-    return magnetometer - 90 >= 0
-      ? magnetometer - 90
-      : magnetometer + 271;
-  };
-
-  render() {
-    return (
-      <Grid style={{backgroundColor: "black"}}>
-        <Row style={{alignItems: "center"}} size={0.9}>
-          <Col style={{alignItems: "center"}}>
-            <Text
-              style={{
-                color: "#fff",
-                fontSize: height / 26,
-                fontWeight: "bold",
-              }}
-            >
-              {this._direction(this._degree(this.state.magnetometer))}
-            </Text>
-          </Col>
-        </Row>
-
-        <Row style={{alignItems: "center"}} size={0.1}>
-          <Col style={{alignItems: "center"}}>
-            <View style={{width: width, alignItems: "center", bottom: 0}}>
-              <Image
-                source={require("../../Assets/Images/Compass/compass_pointer.png")}
-                style={{
-                  height: height / 26,
-                  resizeMode: "contain",
-                }}
-              />
-            </View>
-          </Col>
-        </Row>
-
-        <Row style={{alignItems: "center"}} size={2}>
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: height / 27,
-              width: width,
-              position: "absolute",
-              textAlign: "center",
-            }}
-          >
-            {this._degree(this.state.magnetometer)}°
-          </Text>
-
-          <Col style={{alignItems: "center"}}>
-            <Image
-              source={require("../../Assets/Images/Compass/compass_bg.png")}
-              style={{
-                height: width - 80,
-                justifyContent: "center",
-                alignItems: "center",
-                resizeMode: "contain",
-                transform: [
-                  {rotate: 360 - this.state.magnetometer + "deg"},
-                ],
-              }}
-            />
-          </Col>
-        </Row>
-
-        <Row style={{alignItems: "center"}} size={1}>
-          <Col style={{alignItems: "center"}}>
-            <Text style={{color: "#fff"}}>Copyright @RahulHaque</Text>
-          </Col>
-        </Row>
-      </Grid>
-    );
   }
+
+  return (
+    <SafeAreaView style={CompassStyles.Container}>
+      <View style={CompassStyles.CompassView}>
+        <Image
+          source={require('../../Assets/Images/Compass/compasspointer.png')}
+          style={CompassStyles.CompassPointer}
+          resizeMode="contain"
+        />
+        <Image
+          style={[
+            CompassStyles.RotatingImage,
+            {transform: [{rotate: `${360 - compassHeading}deg`}]},
+          ]}
+          resizeMode="contain"
+          source={require('../../Assets/Images/Compass/compassdegree.png')}
+        />
+      </View>
+      <View style={CompassStyles.DetailsView}>
+        <Title>
+          {compassHeading}° {directions(compassHeading)}
+        </Title>
+        
+        {location !== null ? (
+          <>
+          <Subheading>
+          {location.coords.latitude}, {location.coords.longitude}
+        </Subheading>
+        <Subheading>
+          {location.coords.altitude.toFixed(2)}m Elevation
+        </Subheading>
+        </>
+        ) : (
+          <Text>Please enable location.</Text>
+        )}
+      </View>
+    </SafeAreaView>
+  );
 }

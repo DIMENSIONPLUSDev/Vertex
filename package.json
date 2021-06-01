@@ -10,8 +10,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.4",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/netinfo": "^6.0.0",
+    "@react-native-cookies/cookies": "^6.0.7",
+    "@react-native-masked-view/masked-view": "^0.2.4",
     "@react-navigation/bottom-tabs": "^5.11.10",
+    "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "appcenter": "^4.1.0",
@@ -19,26 +24,35 @@
     "appcenter-crashes": "^4.1.0",
     "axios": "^0.21.1",
     "deepmerge": "^4.2.2",
-    "install": "^0.13.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
     "lpf": "^1.0.0",
+    "moment": "^2.29.1",
     "native-base": "^2.15.2",
+    "query-string": "^7.0.0",
     "react": "17.0.1",
     "react-hook-form": "^7.4.2",
     "react-native": "0.64.1",
+    "react-native-compass-heading": "^1.2.1",
+    "react-native-geolocation-service": "^5.3.0-beta.1",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-location": "^2.5.0",
     "react-native-paper": "^4.8.1",
     "react-native-permissions": "^3.0.3",
+    "react-native-pure-jwt": "^2.2.2",
     "react-native-reanimated": "^2.1.0",
     "react-native-render-html": "^5.1.0",
+    "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.2.0",
     "react-native-sensors": "^7.2.0",
+    "react-native-skeleton-placeholder": "^4.0.0",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-webview": "^11.4.4",
+    "react-native-webview": "11.4.5",
     "react-native-youtube-iframe": "^2.0.1",
     "react-native-zohodesk-portal-sdk": "^1.0.1",
-    "react-query": "^3.16.0"
+    "react-query": "^3.16.0",
+    "units-converter": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -52,10 +66,5 @@
   },
   "jest": {
     "preset": "react-native"
-  },
-  "rnpm": {
-    "assets": [
-      "App/Assets/Fonts"
-    ]
   }
 }
