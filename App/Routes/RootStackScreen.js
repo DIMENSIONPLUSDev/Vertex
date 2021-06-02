@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Login from '../Screens/Guests/Login';
 import Tour from '../Screens/Guests/Tour';
-import Profile from '../Screens/Users/Profile';
 import SignIn from '../Components/Browsers/Auth/SignIn';
 import Browser from '../Components/Browsers/Browser';
 import {useNavigation} from '@react-navigation/core';

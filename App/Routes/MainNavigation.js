@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator, useIsDrawerOpen} from '@react-navigation/drawer';
+import {useIsDrawerOpen} from '@react-navigation/drawer';
 import React from 'react';
 import { Pressable, Image, useWindowDimensions } from 'react-native';
 import Home from '../Screens/Users/Home';
@@ -14,7 +14,6 @@ import TAT from '../Screens/Users/Read/TAT';
 import NewsLetters from '../Screens/Users/Read/NewsLetters';
 import Articles from '../Screens/Users/Read/Articles';
 import VastuCompass from '../Screens/Users/VastuCompass';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export default function MainNavigation({ navigation }) {

@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react';
 import Route from './Routes/Routes';
-import {useColorScheme, PermissionsAndroid, LogBox} from 'react-native';
+import {PermissionsAndroid, LogBox} from 'react-native';
 
 import { QueryClient, QueryClientProvider} from "react-query";
 import SplashScreen from  "react-native-splash-screen";
-//console.reportErrorsAsExceptions = false;
+
 LogBox.ignoreLogs(['Setting a timer']);
 
 function App() {
-  const colorScheme = useColorScheme();
   const queryClient = new QueryClient();
 
   const permissions = () =>{

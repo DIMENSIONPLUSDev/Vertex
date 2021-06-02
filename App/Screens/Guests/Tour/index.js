@@ -47,7 +47,7 @@ export default function Tour() {
       console.log(state.isConnected);
       setIsConnect(state.isConnected);
     });
-  }, []);
+  }, [isConnect]);
 
   function renderLoading() {
     return (

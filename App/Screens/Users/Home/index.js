@@ -42,7 +42,7 @@ export default function Home() {
       //console.log(state.isConnected);
       setIsConnect(state.isConnected);
     });
-  }, []);
+  }, [isConnect]);
 
   function renderLoading() {
     return (

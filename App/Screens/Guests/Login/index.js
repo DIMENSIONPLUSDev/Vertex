@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import React, { useContext } from 'react';
-import {Image, View, useWindowDimensions, Linking} from 'react-native';
+import {Image, View, useWindowDimensions} from 'react-native';
 import {Button} from 'react-native-paper';
 import DPIcons from '../../../Components/Icons/DPIcons';
 import LoginStyles from './styles';

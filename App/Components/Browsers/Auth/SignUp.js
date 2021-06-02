@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import {View, Text} from 'react-native';
+import React, { useContext } from 'react';
+import {View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {ActivityIndicator} from 'react-native-paper';
 import queryString from 'query-string';
@@ -12,7 +12,7 @@ export default function SignUp({navigation}) {
   const client_id = 'q7LVeH5TA6QeJxP9';
   const redirect_uri = 'https://localhost/';
   var redirectUrl = baseUrl + '/moas/broker/login/jwt/' + customer_id + '?client_id=' + client_id + '&redirect_uri=' + redirect_uri;
-  const { SignUp } = useContext(AuthContext);
+  const { signUp } = useContext(AuthContext);
 
   function onNavigationStateChange(navigationState) {
     const url = navigationState.url;

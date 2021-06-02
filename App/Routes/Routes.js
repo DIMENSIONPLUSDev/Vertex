@@ -8,18 +8,15 @@ import linking from './linking';
 import {CombinedDefaultTheme} from '../Utils/Theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from 'jwt-decode';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator, useIsDrawerOpen} from '@react-navigation/drawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 // Screens for navigation
 
 import {TouchableOpacity} from 'react-native';
 import RootStackScreen from './RootStackScreen';
 import {AuthContext} from '../Components/Contexts/AuthContext';
 import {useEffect} from 'react';
-import Modal from '../Components/Modal';
-import MainBottomTabs from "./MainBottomTabs";
 import MainNavigation from './MainNavigation';
-//import MoJwt from "../Components/jwt-connector/miniorange-jwt-connector.node";
+
 
 const BackButton = () => {
   const navigation = useNavigation();
