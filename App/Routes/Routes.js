@@ -9,6 +9,7 @@ import {CombinedDefaultTheme} from '../Utils/Theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from 'jwt-decode';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator, useIsDrawerOpen} from '@react-navigation/drawer';
 // Screens for navigation
 
 import {TouchableOpacity} from 'react-native';
@@ -39,6 +40,7 @@ const BackButton = () => {
 
 export default function Route() {
   const Stack = createStackNavigator();
+  const Drawer = createDrawerNavigator();
   // function verifyJwt(token)
   // {
   //   let jwtBuilder = new MoJwt.JWTBuilder;
@@ -187,7 +189,9 @@ export default function Route() {
       <PaperProvider theme={CombinedDefaultTheme}>
         <NavigationContainer theme={CombinedDefaultTheme} linking={linking}>
           {loginState.userToken !== null ? (
-            <MainNavigation />
+            <Drawer.Navigator initialRouteName="Home" drawerType="slide" drawerStyle={{ width:"55%" }}>
+              <Drawer.Screen name="MainDrawer" component={MainNavigation}/>
+            </Drawer.Navigator>
           ) : (
             <RootStackScreen />
           )}

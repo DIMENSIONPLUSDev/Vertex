@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createDrawerNavigator, useIsDrawerOpen} from '@react-navigation/drawer';
 import React from 'react';
-import { Pressable, Image } from 'react-native';
+import { Pressable, Image, useWindowDimensions } from 'react-native';
 import Home from '../Screens/Users/Home';
 import Browser from '../Components/Browsers/Browser';
 import Compass from '../Screens/Compass';
@@ -14,18 +14,13 @@ import TAT from '../Screens/Users/Read/TAT';
 import NewsLetters from '../Screens/Users/Read/NewsLetters';
 import Articles from '../Screens/Users/Read/Articles';
 import VastuCompass from '../Screens/Users/VastuCompass';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-export default function MainNavigation() {
+export default function MainNavigation({ navigation }) {
   const MainStack = createStackNavigator();
-  const Drawer = createDrawerNavigator();
-
-  function MainDrawer() {
-    return (
-      <Drawer.Navigator>
-        <Drawer.Screen name="Home" component={Home} />
-      </Drawer.Navigator>
-    );
-  }
+  const fontscale = useWindowDimensions().fontScale;
+  const isDrawerOpen = useIsDrawerOpen();
 
   const BackButton = () => {
     const navigation = useNavigation();
@@ -45,8 +40,59 @@ export default function MainNavigation() {
   };
 
   return (
-    <MainStack.Navigator>
-      <MainStack.Screen name="Home" component={MainDrawer} />
+    <MainStack.Navigator headerMode="float">
+      <MainStack.Screen name="Home" component={Home} 
+      options={{
+        headerRight: () => (
+          <Image
+            source={require('../Assets/Images/Logo/Logo.png')}
+            style={{
+              marginRight: 10,
+              height: 35,
+              width: 35,
+              resizeMode: 'contain',
+            }}
+          />
+        ),
+        headerTitle: () => (
+          <Image
+            source={require('../Assets/Images/Logo/Vertex.png')}
+            style={{
+              height: 40,
+              width: 40,
+              resizeMode: 'contain',
+            }}
+          />
+        ),
+        headerLeft: () =>  {
+          if(isDrawerOpen)
+          {
+            return(
+              <Pressable style={{ marginLeft: 10 }} onPress={ () =>
+              {
+                navigation.closeDrawer();
+              }
+              }>
+              <AntDesign name="close" size={32 * fontscale} color="#4d4d4d" />
+              </Pressable>
+            );
+          }
+            return(
+              <Pressable style={{ marginLeft: 10 }} onPress={ () =>
+              {
+                navigation.openDrawer();
+              }
+              }>
+              <DPIcon name="menu" size={31 * fontscale} color="#4d4d4d" />
+              </Pressable>
+            );
+          },
+        headerTitleAllowFontScaling: true,
+        headerTitleStyle: {fontWeight: '400', color: '#F2BB1D'},
+        headerTitleAlign: 'center',
+
+      }}
+      />
       <MainStack.Screen
         name="Browser"
         component={Browser}
