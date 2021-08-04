@@ -5,7 +5,8 @@ import {PermissionsAndroid, LogBox} from 'react-native';
 import { QueryClient, QueryClientProvider} from "react-query";
 import SplashScreen from  "react-native-splash-screen";
 
-LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs(['Setting a timer', 'Reanimated 2']);
+
 
 function App() {
   const queryClient = new QueryClient();
@@ -20,7 +21,8 @@ function App() {
 
   }
 
-  useEffect(()=>{
+  useEffect(() =>
+  {
     permissions();
     SplashScreen.hide();
   },[])

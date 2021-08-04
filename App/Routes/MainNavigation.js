@@ -15,6 +15,7 @@ import NewsLetters from '../Screens/Users/Read/NewsLetters';
 import Articles from '../Screens/Users/Read/Articles';
 import VastuCompass from '../Screens/Users/VastuCompass';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import UnitConvertor from '../Screens/Users/UnitConvertor';
 
 export default function MainNavigation({ navigation }) {
   const MainStack = createStackNavigator();
@@ -117,6 +118,32 @@ export default function MainNavigation({ navigation }) {
           ),
           headerLeft: () => <BackButton />,
           title: 'Compass',
+          headerTitleAllowFontScaling: true,
+          headerTitleStyle: {
+            fontWeight: '400',
+            color: '#F2BB1D',
+            fontFamily: 'Montserrat-Medium',
+          },
+          headerTitleAlign: 'center',
+        }}
+      />
+      <MainStack.Screen
+        name="UnitConvertor"
+        component={UnitConvertor}
+        options={{
+          headerRight: () => (
+            <Image
+              source={require('../Assets/Images/Logo/Logo.png')}
+              style={{
+                marginRight: 10,
+                height: 35,
+                width: 35,
+                resizeMode: 'contain',
+              }}
+            />
+          ),
+          headerLeft: () => <BackButton />,
+          title: 'Unit Convertor',
           headerTitleAllowFontScaling: true,
           headerTitleStyle: {
             fontWeight: '400',

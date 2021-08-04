@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/core';
 import {
   ZohoDeskPortalSDK,
   ZDPortalHome,
+  ZDPortalCommunity
 } from 'react-native-zohodesk-portal-sdk';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -36,6 +37,7 @@ export default function Home() {
     'edbsn5c9b05e64d1be25aa28c73ecf8a5b7db75194640112aace1570a69af5d92fac8',
     'US',
   );
+
 
   useEffect(() => {
     NetInfo.addEventListener(state => {

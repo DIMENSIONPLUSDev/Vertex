@@ -42,6 +42,21 @@ export default function Tour() {
     'US',
   );
 
+  ZohoDeskPortalSDK.isUserSignedIn((isSignedIn) => {
+    if(!isSignedIn) {
+    ZohoDeskPortalSDK.setUserToken("kinkhabwalaraj@gmail.com",
+    (msg) => {
+      console.log(msg)
+    alert('Success Alert '+msg);
+    } , msg => {
+    alert('Failure Alert '+msg);
+    });
+    }
+    else {
+    alert("User is already signed in");
+    }
+    })
+
   useEffect(() => {
     NetInfo.addEventListener(state => {
       console.log(state.isConnected);
@@ -92,7 +107,7 @@ export default function Tour() {
         />
       </View>
       <View style={TourStyles.RequestView}>
-        <Title style={TourStyles.Title}>Ask For</Title>
+        <Title style={TourStyles.Title}>Ask for</Title>
         <View style={TourStyles.RequestItemsView}>
           {/* Add Items and its icons */}
           <Pressable
@@ -180,7 +195,7 @@ export default function Tour() {
         </View>
       </View>
       <Surface style={TourStyles.VariableView}>
-        <Title style={TourStyles.Title}>Ask</Title>
+        <Title style={TourStyles.Title}>Act on</Title>
         <View style={TourStyles.VariableItemsView}>
           <Pressable onPress={
             () => {
@@ -231,7 +246,9 @@ export default function Tour() {
             <Subheading
               allowFontScaling
               adjustsFontSizeToFit
-              style={TourStyles.Subheading}>
+              style={TourStyles.Subheading}
+              numberOfLines={2}
+              >
               Vastu Compass
             </Subheading>
           </View>
@@ -285,7 +302,9 @@ export default function Tour() {
             <Subheading
               allowFontScaling
               adjustsFontSizeToFit
-              style={TourStyles.Subheading}>
+              style={TourStyles.Subheading}
+              numberOfLines={2}
+              >
               Student ID
             </Subheading>
           </View>
@@ -310,7 +329,9 @@ export default function Tour() {
               <Subheading
                 allowFontScaling
                 adjustsFontSizeToFit
-                style={TourStyles.Subheading}>
+                style={TourStyles.Subheading}
+                numberOfLines={2}
+                >
                 Case Study
               </Subheading>
             </View>
@@ -330,7 +351,7 @@ export default function Tour() {
                 allowFontScaling
                 adjustsFontSizeToFit
                 style={TourStyles.Subheading}>
-                Tips and Tricks
+                Tips & Tricks
               </Subheading>
             </View>
           </Pressable>
